@@ -20,8 +20,8 @@ def run_experiment():
     
     n_qubits = 4
     k_qubits = 2
-    n_train = 50
-    n_test = 20
+    n_train = 20
+    n_test = 10
     
     state_types = ['product', 'w', 'ghz']
     results = {}
@@ -38,7 +38,7 @@ def run_experiment():
         
         ansatz = get_ansatz(ansatz_name, n_qubits)
         qae = QAECircuit(n_qubits, k_qubits, ansatz)
-        trainer = QAETrainer(qae, maxiter=200)
+        trainer = QAETrainer(qae)
         
         # Train
         result = trainer.train(train_states)

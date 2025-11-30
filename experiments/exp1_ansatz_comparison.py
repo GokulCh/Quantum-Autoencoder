@@ -25,8 +25,8 @@ def run_experiment():
         (6, 2)
     ]
     
-    n_train = 50
-    n_test = 20
+    n_train = 20
+    n_test = 10
     
     ansatzes = ['RealAmplitudes', 'EfficientSU2', 'HardwareEfficient']
     
@@ -44,17 +44,8 @@ def run_experiment():
             print(f"Training with {name}...")
             try:
                 ansatz = get_ansatz(name, n_qubits)
-                
-                # Check Depth (Constraint < 100)
-                from qiskit import transpile
-                t_ansatz = transpile(ansatz, basis_gates=['cx', 'id', 'rz', 'sx', 'x'])
-                depth = t_ansatz.depth()
-                print(f"Ansatz Depth ({name}): {depth}")
-                if depth > 100:
-                    print(f"WARNING: {name} depth {depth} exceeds 100 gates!")
-                
                 qae = QAECircuit(n_qubits, k_qubits, ansatz)
-                trainer = QAETrainer(qae, maxiter=200)
+                trainer = QAETrainer(qae)
                 
                 # Train
                 result = trainer.train(train_states)

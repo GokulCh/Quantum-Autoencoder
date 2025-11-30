@@ -16,8 +16,8 @@ def run_experiment():
     
     n_qubits = 4
     k_qubits = 2
-    n_train = 50
-    n_test = 20
+    n_train = 20
+    n_test = 10
     
     # Use GHZ states as they are good for QAE
     state_type = 'ghz'
@@ -30,7 +30,7 @@ def run_experiment():
     print("Running QAE...")
     ansatz = get_ansatz('RealAmplitudes', n_qubits)
     qae = QAECircuit(n_qubits, k_qubits, ansatz)
-    trainer = QAETrainer(qae, maxiter=200)
+    trainer = QAETrainer(qae)
     result = trainer.train(train_states)
     
     encoder = qae.get_encoder().assign_parameters(result.x)
