@@ -1,0 +1,3 @@
+Ansatz: RealAmplitudes
+Depth: 25
+Fidelity: 0.5278661549577922

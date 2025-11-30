@@ -1,0 +1,10 @@
+qiskit
+qiskit-aer
+qiskit-machine-learning
+qiskit-ibm-runtime
+numpy
+matplotlib
+scikit-learn
+pandas
+seaborn
+jupyter
