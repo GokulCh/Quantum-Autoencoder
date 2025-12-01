@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
 import numpy as np
 import matplotlib.pyplot as plt
 from src.state_prep import get_state_circuit
@@ -11,11 +7,8 @@ from src.training import QAETrainer
 from src.metrics import compute_reconstruction_fidelity
 
 def run_experiment():
-    """
-    Runs Experiment 2: Entanglement Study.
-    
-    Evaluates the compression performance on different types of entangled states (Product, W, GHZ).
-    """
+    """Runs Experiment 2: Entanglement Study."""
+
     print("Running Experiment 2: Entanglement Study")
     
     n_qubits = 4
@@ -26,7 +19,7 @@ def run_experiment():
     state_types = ['product', 'w', 'ghz']
     results = {}
     
-    # Use best ansatz from Exp 1 (assuming RealAmplitudes for now as it's simpler)
+    # Use best ansatz from Exp 1
     ansatz_name = 'RealAmplitudes'
     
     for state_type in state_types:
@@ -67,9 +60,9 @@ def run_experiment():
     plt.title(f'Entanglement Study (n={n_qubits}, k={k_qubits})')
     plt.ylim(0, 1.0)
     
-    os.makedirs('results', exist_ok=True)
-    plt.savefig('results/exp2_entanglement_study.png')
-    print("Results saved to results/exp2_entanglement_study.png")
+    os.makedirs('results/plots', exist_ok=True)
+    plt.savefig('results/plots/exp2_entanglement_study.png')
+    print("Results saved to results/plots/exp2_entanglement_study.png")
 
 if __name__ == "__main__":
     run_experiment()

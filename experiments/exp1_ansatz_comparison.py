@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
 import numpy as np
 import matplotlib.pyplot as plt
 from src.state_prep import get_state_circuit
@@ -11,12 +7,8 @@ from src.training import QAETrainer
 from src.metrics import compute_reconstruction_fidelity
 
 def run_experiment():
-    """
-    Runs Experiment 1: Ansatz Comparison.
-    
-    Compares the performance of different ansatzes (RealAmplitudes, EfficientSU2, HardwareEfficient)
-    on compressing product states.
-    """
+    """Runs Experiment 1: Ansatz Comparison."""
+
     print("Running Experiment 1: Ansatz Comparison")
     
     configurations = [
@@ -33,7 +25,7 @@ def run_experiment():
     for n_qubits, k_qubits in configurations:
         print(f"\n--- Running for n={n_qubits}, k={k_qubits} ---")
         
-        # 1. Generate Data (Product States)
+        # Generate Data (Product States)
         print("Generating data...")
         train_states = [get_state_circuit('product', n_qubits) for _ in range(n_train)]
         test_states = [get_state_circuit('product', n_qubits) for _ in range(n_test)]
@@ -79,8 +71,8 @@ def run_experiment():
         plt.ylim(0, 1.0)
         
         # Ensure results directory exists
-        os.makedirs('results', exist_ok=True)
-        filename = f'results/exp1_ansatz_comparison_n{n_qubits}_k{k_qubits}.png'
+        os.makedirs('results/plots', exist_ok=True)
+        filename = f'results/plots/exp1_ansatz_comparison_n{n_qubits}_k{k_qubits}.png'
         plt.savefig(filename)
         print(f"Results saved to {filename}")
         plt.close()

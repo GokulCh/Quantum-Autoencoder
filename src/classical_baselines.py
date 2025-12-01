@@ -1,31 +1,15 @@
 import numpy as np
 from sklearn.decomposition import PCA
-from qiskit.quantum_info import Statevector, state_fidelity
+from qiskit.quantum_info import Statevector
 from typing import List, Union
 from qiskit import QuantumCircuit
 
 class ClassicalBaselines:
-    """
-    A class providing classical baseline methods for comparison with the Quantum Autoencoder.
-    """
+
     @staticmethod
     def run_pca(input_states: List[Union[Statevector, QuantumCircuit]], k_latent: int) -> float:
-        """
-        Runs Principal Component Analysis (PCA) on the input quantum states (amplitudes) as a classical baseline.
-        
-        Since quantum states are complex vectors of size 2^n, and PCA works on real vectors,
-        we treat the real and imaginary parts as separate features, effectively doubling the input dimension.
-        We then reduce the dimension to match the degrees of freedom of the k latent qubits.
+        """Runs Principal Component Analysis (PCA) on the input quantum states (amplitudes) as a classical baseline."""
 
-        Args:
-            input_states (List[Union[Statevector, QuantumCircuit]]): List of input states to compress.
-            k_latent (int): Number of latent qubits in the quantum autoencoder. 
-                            The target PCA dimension is derived from this to ensure fair comparison.
-                            Target dimension = 2 * 2^k (real components).
-
-        Returns:
-            float: The average reconstruction fidelity.
-        """
         # Convert circuits to statevectors (amplitudes)
         data = []
         for state in input_states:
@@ -66,14 +50,13 @@ class ClassicalBaselines:
         # Compute average fidelity
         fidelities = []
         for i in range(len(X)):
-            # Normalize reconstructed vector (PCA doesn't preserve norm exactly)
+            # Normalize reconstructed vector
             recon = X_reconstructed[i]
             norm = np.linalg.norm(recon)
             if norm > 1e-9:
                 recon = recon / norm
             
-            # Compute fidelity |<psi|recon>|^2
-            # Since these are complex vectors:
+            # Compute fidelity
             overlap = np.abs(np.dot(X[i].conj(), recon))**2
             fidelities.append(overlap)
             
@@ -81,20 +64,8 @@ class ClassicalBaselines:
 
     @staticmethod
     def run_random_unitary(input_states: List[QuantumCircuit], n_qubits: int, k_qubits: int) -> float:
-        """
-        Runs a Random Unitary baseline.
+        """Runs a Random Unitary baseline."""
         
-        This method uses a random unitary matrix as the encoder and its inverse as the decoder.
-        It serves as a "zero-knowledge" baseline to see how well a random compression works.
-
-        Args:
-            input_states (List[QuantumCircuit]): List of input states.
-            n_qubits (int): Total number of qubits.
-            k_qubits (int): Number of latent qubits.
-
-        Returns:
-            float: The average reconstruction fidelity.
-        """
         from qiskit.quantum_info import random_unitary
         from src.metrics import compute_reconstruction_fidelity
         from qiskit import QuantumCircuit

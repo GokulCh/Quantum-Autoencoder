@@ -1,14 +1,9 @@
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit_aer import AerSimulator
 from qiskit_aer.noise import NoiseModel
 from qiskit import transpile
 
-# Try importing FakeManilaV2 from various locations to be robust
 try:
     from qiskit_ibm_runtime.fake_provider import FakeManilaV2
 except ImportError:
@@ -40,22 +35,21 @@ def run_experiment():
         from qiskit_aer.noise import depolarizing_error
         
         noise_model = NoiseModel()
-        # Add 1% depolarizing error to all single qubit gates
+
         error_1 = depolarizing_error(0.01, 1)
         noise_model.add_all_qubit_quantum_error(error_1, ['u1', 'u2', 'u3', 'rz', 'sx', 'x', 'h', 'ry'])
         
-        # Add 2% depolarizing error to all 2-qubit gates
         error_2 = depolarizing_error(0.02, 2)
         noise_model.add_all_qubit_quantum_error(error_2, ['cx', 'cz', 'ecr'])
         
-        coupling_map = None # All-to-all connectivity for generic
+        coupling_map = None
         basis_gates = ['u1', 'u2', 'u3', 'rz', 'sx', 'x', 'h', 'ry', 'cx', 'cz', 'ecr']
 
     
     n_qubits = 4
     k_qubits = 2
     n_train = 10
-    n_test = 5 # Small number for speed
+    n_test = 5
     
     train_states = [get_state_circuit('product', n_qubits) for _ in range(n_train)]
     test_states = [get_state_circuit('product', n_qubits) for _ in range(n_test)]
@@ -87,21 +81,16 @@ def run_experiment():
     fidelities_noisy = []
     
     for state in test_states:
-        # Full circuit: State -> Encoder -> Decoder -> Inverse State -> Measure
-        # If perfect, we should measure |0...0>
         
         inv_state = state.inverse()
         fid_circ = state.compose(encoder).compose(decoder).compose(inv_state)
         fid_circ.measure_all()
         
-        # Transpile for backend
         t_circ = transpile(fid_circ, backend=backend, coupling_map=coupling_map, basis_gates=basis_gates)
         
-        # Run
         job = noisy_sim.run(t_circ, shots=1024)
         counts = job.result().get_counts()
         
-        # Probability of '0000'
         zero_count = counts.get('0'*n_qubits, 0)
         fid = zero_count / 1024.0
         fidelities_noisy.append(fid)
@@ -116,9 +105,9 @@ def run_experiment():
     plt.title('Noise Robustness (FakeManilaV2)')
     plt.ylim(0, 1.0)
     
-    os.makedirs('results', exist_ok=True)
-    plt.savefig('results/exp3_noise.png')
-    print("Results saved to results/exp3_noise.png")
+    os.makedirs('results/plots', exist_ok=True)
+    plt.savefig('results/plots/exp3_noise.png')
+    print("Results saved to results/plots/exp3_noise.png")
 
 if __name__ == "__main__":
     run_experiment()

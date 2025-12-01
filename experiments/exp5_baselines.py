@@ -1,17 +1,10 @@
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
 import numpy as np
 import matplotlib.pyplot as plt
 from src import get_state_circuit, get_ansatz, QAECircuit, QAETrainer, compute_reconstruction_fidelity, ClassicalBaselines
 
 def run_experiment():
-    """
-    Runs Experiment 5: Baseline Comparison.
+    """Runs Experiment 5: Baseline Comparison."""
     
-    Compares the Quantum Autoencoder against classical baselines (PCA, Random Unitary).
-    """
     print("Running Experiment 5: Baseline Comparison")
     
     n_qubits = 4
@@ -19,14 +12,12 @@ def run_experiment():
     n_train = 20
     n_test = 10
     
-    # Use GHZ states as they are good for QAE
     state_type = 'ghz'
     
     print(f"Generating {state_type} data...")
     train_states = [get_state_circuit(state_type, n_qubits) for _ in range(n_train)]
     test_states = [get_state_circuit(state_type, n_qubits) for _ in range(n_test)]
     
-    # 1. QAE
     print("Running QAE...")
     ansatz = get_ansatz('RealAmplitudes', n_qubits)
     qae = QAECircuit(n_qubits, k_qubits, ansatz)
@@ -43,18 +34,14 @@ def run_experiment():
     avg_qae = np.mean(qae_fidelities)
     print(f"QAE Fidelity: {avg_qae}")
     
-    # 2. PCA
     print("Running PCA...")
-    # PCA needs statevectors
     avg_pca = ClassicalBaselines.run_pca(test_states, k_qubits)
     print(f"PCA Fidelity: {avg_pca}")
     
-    # 3. Random Unitary
     print("Running Random Unitary...")
     avg_random = ClassicalBaselines.run_random_unitary(test_states, n_qubits, k_qubits)
     print(f"Random Unitary Fidelity: {avg_random}")
     
-    # Plot
     labels = ['QAE', 'PCA', 'Random']
     values = [avg_qae, avg_pca, avg_random]
     

@@ -25,28 +25,35 @@ Compares different variational circuits (RealAmplitudes, EfficientSU2, HardwareE
 ```bash
 python experiments/exp1_ansatz_comparison.py
 ```
-**Output**: `results/exp1_ansatz_comparison_*.png`
+**Output**: `results/plots/exp1_ansatz_comparison_*.png`
 
 ### Experiment 2: Entanglement Study
 Evaluates compression performance on Product, W, and GHZ states.
 ```bash
 python experiments/exp2_entanglement_study.py
 ```
-**Output**: `results/exp2_entanglement_study.png`
+**Output**: `results/plots/exp2_entanglement_study.png`
 
 ### Experiment 3: Noise Robustness
 Tests the QAE under realistic noise models (simulated IBM hardware).
 ```bash
 python experiments/exp3_noise_robustness.py
 ```
-**Output**: `results/exp3_noise.png`
+**Output**: `results/plots/exp3_noise.png`
+
+### Experiment 4: Scaling Study
+Evaluates compression performance on Product, W, and GHZ states.
+```bash
+python experiments/exp4_scaling.py
+```
+**Output**: `results/plots/exp4_scaling.png` and `results/logs/exp4_scaling.txt`
 
 ### Experiment 5: Baseline Comparison
 Compares QAE against classical PCA and Random Unitary baselines.
 ```bash
 python experiments/exp5_baselines.py
 ```
-**Output**: `results/exp5_baselines.png`
+**Output**: `results/plots/exp5_baselines.png`
 
 ## Key Constraints & Configuration
 

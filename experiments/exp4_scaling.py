@@ -1,18 +1,10 @@
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
 import numpy as np
 import matplotlib.pyplot as plt
 from src import get_state_circuit, get_ansatz, QAECircuit, QAETrainer, compute_reconstruction_fidelity
 
 def run_experiment():
-    """
-    Runs Experiment 4: Scaling.
-    
-    Tests the autoencoder on a larger system (n=6, k=3) to evaluate scalability and check
-    constraints (circuit depth, qubit usage).
-    """
+    """Runs Experiment 4: Scaling."""
+
     print("Running Experiment 4: Scaling (n=6 -> k=3)")
     
     n_qubits = 6
@@ -20,7 +12,6 @@ def run_experiment():
     n_train = 20
     n_test = 10
     
-    # Use GHZ states as they were compressible
     state_type = 'ghz'
     
     print(f"Generating {state_type} data for n={n_qubits}...")
@@ -33,29 +24,9 @@ def run_experiment():
     ansatz = get_ansatz(ansatz_name, n_qubits)
     qae = QAECircuit(n_qubits, k_qubits, ansatz)
     
-    # Check Constraints
-    # 1. Total qubits: n + (n-k) reference? 
-    # In our implementation:
-    # Circuit has n qubits.
-    # Training uses measurement, so no extra qubits needed for SWAP test if we use direct measurement.
-    # If we used SWAP test, it would be 2*n_trash + 1 aux.
-    # Our implementation: n qubits.
-    # Wait, the proposal says: "(n - k) ancilla qubits initialized to |0>".
-    # And "Total qubit usage... not exceeding 10 qubits".
-    # For n=6, k=3:
-    # Encoder: 6 qubits.
-    # Decoder: 6 qubits (3 latent + 3 ancilla).
-    # Total system size is 6.
-    # If we use SWAP test for training:
-    # We need to compare trash (3 qubits) with |000>.
-    # Standard SWAP test: 1 aux + 3 trash + 3 ref = 7 qubits.
-    # Total = 3 latent + 7 = 10 qubits. Fits!
-    # But our training uses direct measurement of trash, which uses 0 extra qubits.
-    
+
     # Check Depth
-    # Transpile to basis gates to get realistic depth
     from qiskit import transpile
-    # Basis gates for IBM machines usually: cx, id, rz, sx, x
     basis_gates = ['cx', 'id', 'rz', 'sx', 'x']
     t_ansatz = transpile(ansatz, basis_gates=basis_gates)
     depth = t_ansatz.depth()
