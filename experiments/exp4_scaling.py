@@ -57,11 +57,11 @@ def run_experiment():
     print(f"Average Test Fidelity (n=6, GHZ): {avg_fid}")
     
     # Save results
-    with open('results/exp4_scaling.txt', 'w') as f:
+    with open('results/logs/exp4_scaling.txt', 'w') as f:
         f.write(f"Ansatz: {ansatz_name}\n")
         f.write(f"Depth: {depth}\n")
         f.write(f"Fidelity: {avg_fid}\n")
-    print("Results saved to results/exp4_scaling.txt")
+    print("Results saved to results/logs/exp4_scaling.txt")
 
 if __name__ == "__main__":
     os.makedirs('results', exist_ok=True)
