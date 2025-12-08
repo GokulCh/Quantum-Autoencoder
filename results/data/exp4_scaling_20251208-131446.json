@@ -1,0 +1,53 @@
+{
+    "experiment_name": "exp4_scaling",
+    "timestamp": "20251208-131446",
+    "config": {
+        "configs": [
+            [
+                4,
+                2
+            ],
+            [
+                6,
+                3
+            ],
+            [
+                8,
+                4
+            ]
+        ],
+        "n_train": 20,
+        "n_test": 10,
+        "state_type": "ghz",
+        "ansatz": "RealAmplitudes"
+    },
+    "results": {
+        "n4_k2": {
+            "n_qubits": 4,
+            "k_qubits": 2,
+            "depth": 35,
+            "training_time": 40.510767459869385,
+            "avg_fidelity": 0.9999970632452768,
+            "std_fidelity": 1.4284751937507178e-06,
+            "final_loss": 1.516653152694447e-06
+        },
+        "n6_k3": {
+            "n_qubits": 6,
+            "k_qubits": 3,
+            "depth": 37,
+            "training_time": 55.555503368377686,
+            "avg_fidelity": 0.6309156054514784,
+            "std_fidelity": 0.1548847903372605,
+            "final_loss": 0.22591136796337122
+        },
+        "n8_k4": {
+            "n_qubits": 8,
+            "k_qubits": 4,
+            "depth": 39,
+            "training_time": 74.07508492469788,
+            "avg_fidelity": 0.4304494315531316,
+            "std_fidelity": 0.30773948010529883,
+            "final_loss": 0.4138239512334243
+        }
+    }
+}
