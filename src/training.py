@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from qiskit import QuantumCircuit
 from qiskit.primitives import Sampler
 from scipy.optimize import minimize, OptimizeResult
@@ -43,6 +44,10 @@ class QAETrainer:
         if initial_point is None:
             initial_point = np.random.random(self.qae.ansatz.num_parameters)
             
+        start_time = time.time()
         result = minimize(objective_function, x0=initial_point, method='COBYLA', options={'maxiter': self.maxiter})
+        end_time = time.time()
+        
+        self.training_time = end_time - start_time
         
         return result
