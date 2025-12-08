@@ -8,9 +8,12 @@ from src.training import QAETrainer
 from src.metrics import compute_reconstruction_fidelity
 from src.classical_baselines import ClassicalBaselines
 from src.logging import ExperimentLogger
+from src.utils import set_seed, get_rng
 
-def run_experiment():
+def run_experiment(seed: int = None):
     """Runs Experiment 5: Baseline Comparison with enhanced logging."""
+    set_seed(seed)
+    rng = get_rng(seed)
     
     experiment_name = "exp5_baselines"
     logger = ExperimentLogger(experiment_name)
@@ -27,12 +30,13 @@ def run_experiment():
         "k_qubits": k_qubits,
         "n_train": n_train,
         "n_test": n_test,
-        "state_type": state_type
+        "state_type": state_type,
+        "seed": seed
     })
 
     print(f"Generating {state_type} data...")
-    train_states = [get_state_circuit(state_type, n_qubits) for _ in range(n_train)]
-    test_states = [get_state_circuit(state_type, n_qubits) for _ in range(n_test)]
+    train_states = [get_state_circuit(state_type, n_qubits, rng=rng) for _ in range(n_train)]
+    test_states = [get_state_circuit(state_type, n_qubits, rng=rng) for _ in range(n_test)]
     
     results = {}
     

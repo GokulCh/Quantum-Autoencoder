@@ -8,9 +8,13 @@ from src.qae_circuit import QAECircuit
 from src.training import QAETrainer
 from src.metrics import compute_reconstruction_fidelity
 from src.logging import ExperimentLogger
+from src.utils import set_seed, get_rng
 
-def run_experiment():
+def run_experiment(seed: int = None):
     """Runs Experiment 4: Scaling with improved metrics."""
+    set_seed(seed)
+    rng = get_rng(seed)
+
     experiment_name = "exp4_scaling"
     logger = ExperimentLogger(experiment_name)
     print(f"Running {experiment_name}...")
@@ -32,7 +36,8 @@ def run_experiment():
         "n_train": n_train,
         "n_test": n_test,
         "state_type": state_type,
-        "ansatz": ansatz_name
+        "ansatz": ansatz_name,
+        "seed": seed
     })
     
     results = {}
@@ -43,8 +48,8 @@ def run_experiment():
         
         try:
             print(f"Generating {state_type} data...")
-            train_states = [get_state_circuit(state_type, n_qubits) for _ in range(n_train)]
-            test_states = [get_state_circuit(state_type, n_qubits) for _ in range(n_test)]
+            train_states = [get_state_circuit(state_type, n_qubits, rng=rng) for _ in range(n_train)]
+            test_states = [get_state_circuit(state_type, n_qubits, rng=rng) for _ in range(n_test)]
             
             ansatz = get_ansatz(ansatz_name, n_qubits)
             qae = QAECircuit(n_qubits, k_qubits, ansatz)

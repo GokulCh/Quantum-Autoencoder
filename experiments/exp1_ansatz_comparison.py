@@ -7,9 +7,13 @@ from src.qae_circuit import QAECircuit
 from src.training import QAETrainer
 from src.metrics import compute_reconstruction_fidelity
 from src.logging import ExperimentLogger
+from src.utils import set_seed, get_rng
 
-def run_experiment():
+def run_experiment(seed: int = None):
     """Runs Experiment 1: Ansatz Comparison with enhanced logging."""
+
+    set_seed(seed)
+    rng = get_rng(seed)
 
     experiment_name = "exp1_ansatz_comparison"
     logger = ExperimentLogger(experiment_name)
@@ -29,7 +33,8 @@ def run_experiment():
         "configurations": configurations,
         "n_train": n_train,
         "n_test": n_test,
-        "ansatzes": ansatzes
+        "ansatzes": ansatzes,
+        "seed": seed
     })
     
     all_results = {} # hierarchical structure for plotting later
@@ -42,8 +47,8 @@ def run_experiment():
 
         # Generate Data (Product States)
         print("Generating data...")
-        train_states = [get_state_circuit('product', n_qubits) for _ in range(n_train)]
-        test_states = [get_state_circuit('product', n_qubits) for _ in range(n_test)]
+        train_states = [get_state_circuit('product', n_qubits, rng=rng) for _ in range(n_train)]
+        test_states = [get_state_circuit('product', n_qubits, rng=rng) for _ in range(n_test)]
         
         for name in ansatzes:
             print(f"Training with {name}...")

@@ -20,8 +20,12 @@ from src.qae_circuit import QAECircuit
 from src.training import QAETrainer
 from src.metrics import compute_reconstruction_fidelity
 from src.logging import ExperimentLogger
+from src.utils import set_seed, get_rng
 
-def run_experiment():
+def run_experiment(seed: int = None):
+    set_seed(seed)
+    rng = get_rng(seed)
+
     experiment_name = "exp3_noise_robustness"
     logger = ExperimentLogger(experiment_name)
     print(f"Running {experiment_name}...")
@@ -62,11 +66,12 @@ def run_experiment():
         "n_train": n_train,
         "n_test": n_test,
         "noise_model": noise_model_name,
-        "ansatz": "RealAmplitudes"
+        "ansatz": "RealAmplitudes",
+        "seed": seed
     })
     
-    train_states = [get_state_circuit('product', n_qubits) for _ in range(n_train)]
-    test_states = [get_state_circuit('product', n_qubits) for _ in range(n_test)]
+    train_states = [get_state_circuit('product', n_qubits, rng=rng) for _ in range(n_train)]
+    test_states = [get_state_circuit('product', n_qubits, rng=rng) for _ in range(n_test)]
     
     ansatz = get_ansatz('RealAmplitudes', n_qubits)
     qae = QAECircuit(n_qubits, k_qubits, ansatz)
